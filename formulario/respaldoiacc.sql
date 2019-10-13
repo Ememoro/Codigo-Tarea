@@ -1,0 +1,101 @@
+DROP TABLE empleado;
+
+CREATE TABLE `empleado` (
+  `ID_EMPLEADO` varchar(5) NOT NULL,
+  `NOMBRE` varchar(25) NOT NULL,
+  `USUARIO` varchar(20) NOT NULL,
+  `CLAVE` varchar(100) NOT NULL,
+  `ESTADO` int(11) NOT NULL,
+  `ID_FUNCION` int(8) NOT NULL,
+  PRIMARY KEY (`ID_EMPLEADO`),
+  KEY `FK_ME_ESP` (`ID_FUNCION`),
+  CONSTRAINT `FK_ME_ESP` FOREIGN KEY (`ID_FUNCION`) REFERENCES `funcion` (`ID_FUNCION`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO empleado VALUES("em001","Jose Rios","admin","81dc9bdb52d04dc20036dbd8313ed055","0","1");
+
+
+
+DROP TABLE especialidad;
+
+CREATE TABLE `especialidad` (
+  `ID_ESPECIALIDAD` varchar(5) NOT NULL,
+  `NOMBRE` varchar(35) NOT NULL,
+  PRIMARY KEY (`ID_ESPECIALIDAD`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO especialidad VALUES("kine1","Kinesiologo");
+
+
+
+DROP TABLE funcion;
+
+CREATE TABLE `funcion` (
+  `ID_FUNCION` int(8) NOT NULL AUTO_INCREMENT,
+  `FUNCION` varchar(20) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`ID_FUNCION`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+INSERT INTO funcion VALUES("1","Administrador");
+INSERT INTO funcion VALUES("2","Supervisor");
+
+
+
+DROP TABLE medico;
+
+CREATE TABLE `medico` (
+  `ID_MEDICO` varchar(5) NOT NULL,
+  `NOMBRE` varchar(25) NOT NULL,
+  `TELEFONO` varchar(15) NOT NULL,
+  `ID_ESPECIALIDAD` varchar(5) NOT NULL,
+  PRIMARY KEY (`ID_MEDICO`),
+  KEY `FK_MED_ESP` (`ID_ESPECIALIDAD`),
+  CONSTRAINT `FK_MED_ESP` FOREIGN KEY (`ID_ESPECIALIDAD`) REFERENCES `especialidad` (`ID_ESPECIALIDAD`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO medico VALUES("med01","Pablo Torres","950368206","kine1");
+
+
+
+DROP TABLE paciente;
+
+CREATE TABLE `paciente` (
+  `ID_PACIENTE` varchar(5) NOT NULL,
+  `NOMBRE` varchar(25) NOT NULL,
+  `PASS` varchar(8) NOT NULL,
+  `TELEFONO` varchar(15) NOT NULL,
+  `CORREO` varchar(20) NOT NULL,
+  PRIMARY KEY (`ID_PACIENTE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO paciente VALUES("001","Marcelo Morin","1234","987654321","marcelo@gmail.com");
+INSERT INTO paciente VALUES("002","Zinedine Zidane","2345","12356789","zzizou@gmail.com");
+INSERT INTO paciente VALUES("005","Andres Lopez","3456","934298401","alopez@gmail.com");
+INSERT INTO paciente VALUES("006","Matias Rafael","4567","637495021","matias@gmail.com");
+INSERT INTO paciente VALUES("007","Samuel Rodriguez","5678","749362045","samuel@gmail.com");
+INSERT INTO paciente VALUES("009","Raul Martinez","6789","637489203","raul@gmail.com");
+
+
+
+DROP TABLE reserva;
+
+CREATE TABLE `reserva` (
+  `ID_RESERVA` varchar(5) NOT NULL,
+  `ID_PACIENTE` varchar(5) NOT NULL,
+  `ID_MEDICO` varchar(5) NOT NULL,
+  `ID_ESPECIALIDAD` varchar(5) NOT NULL,
+  `HORA` time NOT NULL,
+  `FECHA` date NOT NULL,
+  PRIMARY KEY (`ID_RESERVA`),
+  KEY `FK_RES_PAC` (`ID_PACIENTE`),
+  KEY `FK_RES_MED` (`ID_MEDICO`),
+  KEY `FK_RES_ESP` (`ID_ESPECIALIDAD`),
+  CONSTRAINT `FK_RES_ESP` FOREIGN KEY (`ID_ESPECIALIDAD`) REFERENCES `especialidad` (`ID_ESPECIALIDAD`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_RES_MED` FOREIGN KEY (`ID_MEDICO`) REFERENCES `medico` (`ID_MEDICO`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_RES_PAC` FOREIGN KEY (`ID_PACIENTE`) REFERENCES `paciente` (`ID_PACIENTE`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO reserva VALUES("res01","001","med01","kine1","08:30:00","2019-08-08");
+
+
+
